@@ -1,0 +1,54 @@
+[package]
+name = "sinan"
+version = "0.1.0"
+edition = "2024"
+
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+debug = false
+strip = "symbols"
+panic = "abort"
+
+[profile.test]
+opt-level = 2 
+
+[dependencies]
+anyhow = "1.0"
+thiserror = "2.0"
+rayon = "1.12"
+rustc-hash = "2.1"
+memmap2 = "0.9"
+bincode = "2.0"
+tempfile = "3.27"
+serde = { version = "1.0", features = ["derive"] }
+toml = "1.0"
+colored = "3.1"
+inquire = "0.9"
+terminal_size = "0.4"
+indicatif = "0.18"
+mlua = { version = "0.12", features = ["lua55", "vendored", "serialize", "macros", "error-send"] }
+sysinfo = "0.38"
+proc-maps = "0.4"
+
+[target.'cfg(any(target_os = "linux", target_os = "android"))'.dependencies]
+libc = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = {
+    version = "0.61",
+    features = [
+        "Win32_Foundation",
+        "Win32_System_Threading",
+        "Win32_System_Diagnostics_Debug",
+    ]
+}
+
+[target.'cfg(target_os = "macos")'.dependencies]
+mach2 = "0.6"
+
