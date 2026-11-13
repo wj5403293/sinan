@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use proc_maps::{Pid, get_process_maps};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
@@ -61,8 +61,15 @@ impl Maps {
         }
     }
 
+    // NOTE: proc-maps 存在 Android 兼容性问题：
+    // 对于 maps 中的零长度映射记录（start == end，例如 [page size compat]），
+    // 库内部会因 start >= end 判定为非法参数并返回 EINVAL，
+    // 导致整个 maps 解析失败。因此需要修改 /.cargo/registry/src/index.crates.io-*/proc-maps-0.5.0/src/linux_maps.rs 判断或自行解析 /proc/{pid}/maps，
+    // 并跳过此类无效长度的映射记录。
+    // 后续考虑修复此问题
     pub fn parse(pid: u32) -> Result<Self> {
-        let maps = get_process_maps(pid as Pid)?;
+        let maps = get_process_maps(pid as Pid)
+            .with_context(|| format!("获取进程 maps 失败 (pid={pid})"))?;
 
         let mut areas = Self::new();
         for map in maps {

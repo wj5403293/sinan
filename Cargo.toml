@@ -34,7 +34,7 @@ terminal_size = "0.4"
 indicatif = "0.18"
 mlua = { version = "0.12", features = ["lua55", "vendored", "serialize", "macros", "error-send"] }
 sysinfo = "0.38"
-proc-maps = "0.4"
+proc-maps = "0.5"
 
 [target.'cfg(any(target_os = "linux", target_os = "android"))'.dependencies]
 libc = "0.2"

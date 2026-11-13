@@ -127,13 +127,13 @@ pub fn run() -> Result<bool> {
             );
 
             let process = toml.get_target_config()?;
-            println!("{}{}", "扫描地址：".bright_green(), format!("{:X?}", &process.addresses).bright_magenta());
+            println!("{}{}", "扫描地址：".bright_green(), format!("{:X?}", process.addresses).bright_magenta());
             println!("{}{}", "扫描深度：".bright_green(), process.depth.to_string().bright_magenta());
             println!("{}{}", "偏移范围：".bright_green(), process.offset.to_string().bright_magenta());
-            println!("{}{}", "目标模块：".bright_green(), format!("{:?}", &process.modules.as_vec()).bright_magenta());
+            println!("{}{}", "目标模块：".bright_green(), format!("{:?}", process.modules.as_vec()).bright_magenta());
         },
         error: |e| {
-            Menu::show_error(&e.to_string());
+            Menu::show_error(&format!("{e:#}"));
         },
         back(top): ["0"] "返回主菜单",
         "扫描配置" => config::run(),

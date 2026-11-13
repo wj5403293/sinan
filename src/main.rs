@@ -67,7 +67,7 @@ fn main() {
     Terminal::clear();
 
     if let Err(e) = init_fs() {
-        println!("{}", &e.to_string());
+        println!("{e:?}");
         return;
     }
 

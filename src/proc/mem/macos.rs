@@ -29,32 +29,31 @@ impl ProcessHandleInner {
     }
 
     #[inline(always)]
-    pub(crate) fn read_bytes(&self, addr: u64, buf: &mut [u8]) -> Result<()> {
-        let mut read_len = 0;
+    pub(crate) fn read_bytes(&self, addr: u64, buf: &mut [u8]) -> Result<usize> {
+        let mut read_len: mach_vm_size_t = 0;
         let result = unsafe {
             mach_vm_read_overwrite(
                 self.task,
-                addr as _,
-                buf.len() as _,
-                buf.as_mut_ptr() as _,
+                addr,
+                buf.len() as mach_vm_size_t,
+                buf.as_mut_ptr() as mach_vm_address_t,
                 &mut read_len,
             )
         };
-        if result != kern_return::KERN_SUCCESS || read_len as usize != buf.len() {
-            Err(io::Error::last_os_error())
+        if result == kern_return::KERN_SUCCESS {
+            Ok(read_len as usize)
         } else {
-            Ok(())
+            Err(io::Error::last_os_error())
         }
     }
 
     #[inline(always)]
-    pub(crate) fn write_bytes(&self, addr: u64, buf: &[u8]) -> Result<()> {
-        let result =
-            unsafe { mach_vm_write(self.task, addr as _, buf.as_ptr() as _, buf.len() as _) };
-        if result != kern_return::KERN_SUCCESS {
-            Err(io::Error::last_os_error())
+    pub(crate) fn write_bytes(&self, addr: u64, buf: &[u8]) -> Result<usize> {
+        let result = unsafe { mach_vm_write(self.task, addr, buf.as_ptr() as _, buf.len() as _) };
+        if result == kern_return::KERN_SUCCESS {
+            Ok(buf.len())
         } else {
-            Ok(())
+            Err(io::Error::last_os_error())
         }
     }
 }

@@ -104,26 +104,28 @@ pub fn run() -> Result<bool> {
     Terminal::clear();
 
     run_menu! {
-        init: {
-            let toml = config::get_global()?;
-            let process = toml.get_target_config()?;
+            init: {
+                let toml = config::get_global()?;
+                let process = toml.get_target_config()?;
 
-            println!("{}", Terminal::line());
-            println!("{}{}", "扫描地址：".bright_green(), format!("{:X?}", &process.addresses).bright_magenta());
-            println!("{}{}", "扫描深度：".bright_green(), process.depth.to_string().bright_magenta());
-            println!("{}{}", "偏移范围：".bright_green(), process.offset.to_string().bright_magenta());
-            println!("{}{}", "目标模块：".bright_green(), format!("{:?}", &process.modules.as_vec()).bright_magenta());
-        },
-        error: |e| {
-            Menu::show_error(&e.to_string());
-        },
-        back(top): ["0"] "返回上一步",
-        "扫描地址" => change_scan_addresses(),
-        "扫描深度" => change_scan_depth(),
-        "扫描范围" => change_scan_range(),
-        "扫描模块" => scan_modules::run(),
-        ["r"] "重置参数" => reset_scan_params(),
-    }
+                println!("{}", Terminal::line());
+                println!("{}{}", "扫描地址：".bright_green(), format!("{:X?}",
+    process.addresses).bright_magenta());
+                println!("{}{}", "扫描深度：".bright_green(), process.depth.to_string().bright_magenta());
+                println!("{}{}", "偏移范围：".bright_green(), process.offset.to_string().bright_magenta());
+                println!("{}{}", "目标模块：".bright_green(), format!("{:?}",
+    process.modules.as_vec()).bright_magenta());
+            },
+            error: |e| {
+                Menu::show_error(&format!("{e:#}"));
+            },
+            back(top): ["0"] "返回上一步",
+            "扫描地址" => change_scan_addresses(),
+            "扫描深度" => change_scan_depth(),
+            "扫描范围" => change_scan_range(),
+            "扫描模块" => scan_modules::run(),
+            ["r"] "重置参数" => reset_scan_params(),
+        }
 
     Terminal::clear();
     Ok(true)

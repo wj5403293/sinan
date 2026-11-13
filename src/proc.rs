@@ -103,7 +103,8 @@ fn find_pid_by_name(target_name: &str) -> Option<u32> {
         true,
         ProcessRefreshKind::nothing()
             .with_cmd(UpdateKind::Always)
-            .with_memory(),
+            .with_memory()
+            .without_tasks(),
     );
 
     sys.processes()

@@ -82,13 +82,13 @@ pub fn run() {
             art_print();
         },
         error: |e| {
-            Menu::show_error(&e.to_string());
+            Menu::show_error(&format!("{e:#}"));
         },
         back(bottom): ["q"] "退出程序",
         "基础配置"       => config::run(),
         "扫描指针"       => ptrscan::run(),
         "指针过滤"       => ptrfilter::run(),
         "模拟脚本"       => script_exec::run(),
-        ["h"] "使用介绍" => help(),
+        ["h"] "使用须知" => help(),
     }
 }

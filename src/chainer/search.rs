@@ -39,13 +39,12 @@ fn filter_pointer_from_block(
             buf.set_len(read_len);
         }
 
-        let io = handle.read_array(start + offset as u64, &mut buf[..read_len]);
-        if io.is_err() {
+        let Ok(vaild_size) = handle.read_array(start + offset as u64, &mut buf[..read_len]) else {
             return;
-        }
+        };
 
         let mut i = 0;
-        while i + 1 < read_len {
+        while i + 1 < vaild_size / 4 {
             if buf[i] == 0 {
                 i += 1;
                 continue;

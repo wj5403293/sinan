@@ -40,7 +40,7 @@ pub fn run() -> Result<bool> {
             );
         },
         error: |e| {
-            Menu::show_error(&e.to_string());
+            Menu::show_error(&format!("{e:#}"));
         },
         back(top): ["0"] "返回主菜单",
         "执行脚本" => execute_script_menu(),

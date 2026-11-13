@@ -33,8 +33,8 @@ impl ProcessHandleInner {
     }
 
     #[inline(always)]
-    pub(crate) fn read_bytes(&self, addr: u64, buf: &mut [u8]) -> Result<()> {
-        let mut bytes_read = 0;
+    pub(crate) fn read_bytes(&self, addr: u64, buf: &mut [u8]) -> Result<usize> {
+        let mut bytes_read: usize = 0;
         let res = unsafe {
             ReadProcessMemory(
                 self.handle,
@@ -44,16 +44,16 @@ impl ProcessHandleInner {
                 &mut bytes_read,
             )
         };
-        if res == 0 {
-            Err(io::Error::last_os_error())
+        if res != 0 {
+            Ok(bytes_read)
         } else {
-            Ok(())
+            Err(io::Error::last_os_error())
         }
     }
 
     #[inline(always)]
-    pub(crate) fn write_bytes(&self, addr: u64, buf: &[u8]) -> Result<()> {
-        let mut bytes_written = 0;
+    pub(crate) fn write_bytes(&self, addr: u64, buf: &[u8]) -> Result<usize> {
+        let mut bytes_written: usize = 0;
         let res = unsafe {
             WriteProcessMemory(
                 self.handle,
@@ -63,10 +63,10 @@ impl ProcessHandleInner {
                 &mut bytes_written,
             )
         };
-        if res == 0 {
-            Err(io::Error::last_os_error())
+        if res != 0 {
+            Ok(bytes_written)
         } else {
-            Ok(())
+            Err(io::Error::last_os_error())
         }
     }
 }

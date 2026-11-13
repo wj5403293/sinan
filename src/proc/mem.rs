@@ -49,9 +49,9 @@ impl ProcessHandle {
     }
 
     #[inline(always)]
-    pub fn read_array<T: Copy>(&self, addr: u64, buf: &mut [T]) -> Result<()> {
+    pub fn read_array<T: Copy>(&self, addr: u64, buf: &mut [T]) -> Result<usize> {
         if buf.is_empty() {
-            return Ok(());
+            return Ok(0);
         }
         let byte_len = size_of_val(buf);
         let slice = unsafe { from_raw_parts_mut(buf.as_mut_ptr().cast(), byte_len) };
@@ -59,9 +59,9 @@ impl ProcessHandle {
     }
 
     #[inline(always)]
-    pub fn write_array<T: Copy>(&self, addr: u64, buf: &[T]) -> Result<()> {
+    pub fn write_array<T: Copy>(&self, addr: u64, buf: &[T]) -> Result<usize> {
         if buf.is_empty() {
-            return Ok(());
+            return Ok(0);
         }
         let byte_len = size_of_val(buf);
         let slice = unsafe { from_raw_parts(buf.as_ptr().cast(), byte_len) };

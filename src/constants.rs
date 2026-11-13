@@ -11,4 +11,4 @@ pub const DIR_OUT: &str = "out";
 pub const DIR_TMP: &str = "tmp";
 pub const DIR_SCRIPTS: &str = "scripts";
 
-pub const VERSION: &str = "v2.2026.11.3.22";
+pub const VERSION: &str = "v2.2026.11.13.8";

@@ -116,7 +116,7 @@ pub fn run() -> Result<bool> {
             println!("{}{}", "扫描模式：".bright_green(), format!("\"{mode_str}\"").bright_magenta());
         },
         error: |e| {
-            Menu::show_error(&e.to_string());
+            Menu::show_error(&format!("{e:#}"));
         },
         back(top): ["0"] "返回主菜单",
         "应用包名" => change_target(),
